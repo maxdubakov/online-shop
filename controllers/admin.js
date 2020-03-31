@@ -26,3 +26,33 @@ exports.getProducts = (req, res, next) => {
         });
     });
 };
+
+exports.getEditProduct = (req, res, next) => {
+    const productId = req.params.productId;
+    Product.findById(productId, product => {
+        res.render('admin/edit-product', {
+            pageTitle: product.title,
+            path: '/admin/products',
+            product: product
+        });
+    });
+};
+
+exports.postEditProduct = (req, res, next) => {
+    const title = req.body.title;
+    const imageURL = req.body.imageURL;
+    const price = req.body.price;
+    const description = req.body.description;
+    const id = req.params.productId;
+    Product.findById(id, product => {
+        product.title = title;
+        product.imaURL = imageURL;
+        product.price = price;
+        product.description = description;
+        res.render('/admin/products', {
+            pageTitle: product.title,
+            path: '/admin/products',
+            product: product
+        });
+    });
+};
