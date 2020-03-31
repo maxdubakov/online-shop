@@ -16,6 +16,7 @@ const getProductsFromFile = cb => {
         }
     });
 }
+
 ///////////
 
 module.exports = class Product {
@@ -57,5 +58,13 @@ module.exports = class Product {
             const product = products.find(p => p.id === id);
             cb(product);
         });
-    } 
+    }
+
+    replace(title, imageURL, price, description) {
+            this.title = title;
+            this.imageURL = imageURL;
+            this.price = price;
+            this.description = description;
+        
+    }
 }

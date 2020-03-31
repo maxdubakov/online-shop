@@ -1,4 +1,11 @@
+const fs = require('fs');
+const path = require('path');
+
 const Product = require('../models/product');
+
+const rootDir = require('../util/path');
+const p = path.join(rootDir, 'data', 'products.json');
+
 
 exports.getAddProduct = (req, res, next) => {
     res.render('admin/add-product', {
@@ -44,15 +51,25 @@ exports.postEditProduct = (req, res, next) => {
     const price = req.body.price;
     const description = req.body.description;
     const id = req.params.productId;
-    Product.findById(id, product => {
-        product.title = title;
-        product.imaURL = imageURL;
-        product.price = price;
-        product.description = description;
-        res.render('/admin/products', {
-            pageTitle: product.title,
-            path: '/admin/products',
-            product: product
+    Product.fetchAll(products => {
+        Product.findById(id, product => {
+            let done = false;
+            for (let i = 0; i < products.length && !done; i++) {
+                if (products[i].id === product.id) {
+                    products[i].title = title;
+                    products[i].imageURL = imageURL;
+                    products[i].price = price;
+                    products[i].description = description;
+                    done = true;
+                }
+            }
+            fs.writeFile(p, JSON.stringify(products), err => {
+                res.render('admin/products', {
+                    prods: products,
+                    pageTitle: 'Admin Products',
+                    path: '/admin/products'
+                });
+            });
         });
     });
 };
