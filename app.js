@@ -29,6 +29,12 @@ app.use((req, res, next) => {
     User.findByPk(1)
         .then(user => {
             req.user = user;
+        })
+        .then(result => {
+            return Cart.findByPk(1)
+        })
+        .then(cart => {
+            req.cart = cart;
             next();
         })
         .catch(err => console.log(err));
@@ -54,7 +60,7 @@ Order.belongsToMany(Product, { through: OrderItem});
 Product.belongsToMany(Order, { through: OrderItem});
 
 sequelize
-    .sync({force: true})
+    .sync()
     .then(result => {
         return User.findByPk(1);
     })
