@@ -22,7 +22,7 @@ class User {
         const db = getDb();
 
         return db
-        .collections('users')
+        .collection('users')
         .findOne({ _id: new ObjectId(userId) });
     }
 }
