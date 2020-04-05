@@ -1,5 +1,9 @@
 const mongodb = require('mongodb');
 
+const getDb = require('../util/database').getDb;
+
+const ObjectId = mongodb.ObjectId;
+
 class User {
 
     constructor(userename, email) {
@@ -19,12 +23,7 @@ class User {
 
         return db
         .collections('users')
-        .find({_id: new mongodb.ObjectId(userId)})
-        .next()
-        .then(user => {
-            return user
-        })
-        .catch(err => console.log(err))
+        .findOne({ _id: new ObjectId(userId) });
     }
 }
 
