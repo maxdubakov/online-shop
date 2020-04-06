@@ -65,6 +65,24 @@ class User {
             .collection('products')
             .find({ _id: { $in: productIds } })
             .toArray()
+            .then(async products => {
+                if (products.length == productIds.length)
+                    return products;
+                else {
+                    let match = false;
+                    for (let i = 0; i < productIds.length; i++) {
+                        for (let j = 0; j < products.length && !match; j++) {
+                            if (productIds[i].toString() === products[j].toString()) {
+                                match = true;
+                            }
+                        }
+                        if (!match) {
+                            this.deleteProductFromCart(productIds[i]);
+                        }
+                    }
+                    return await products;
+                }
+            })
             .then(products => {
                 return products.map(product => {
                     return {
@@ -74,7 +92,7 @@ class User {
                         }).quantity
                     }
                 })
-            });
+            })
     }
 
     deleteProductFromCart(productId) {
@@ -87,11 +105,7 @@ class User {
             .collection('users')
             .updateOne(
                 { _id: new ObjectId(this._id) },
-                {
-                    $set: {
-                        cart: {items: updatedCartItems}
-                    }
-                }
+                { $set: { cart: { items: updatedCartItems } } }
             );
     }
 
@@ -105,31 +119,31 @@ class User {
                 user: {
                     _id: new ObjectId(this._id),
                     name: this.name,
-    
+
                 }
             };
             return db
-        .collection('orders')
-        .insertOne(order)
+                .collection('orders')
+                .insertOne(order)
         })
-        .then(result => {
-            this.cart = {items: []};
-            return db
-            .collection('users')
-            .updateOne(
-                { _id: new ObjectId(this._id) },
-                { $set: { cart: { items: [] } } }
-            );
-        })
+            .then(result => {
+                this.cart = { items: [] };
+                return db
+                    .collection('users')
+                    .updateOne(
+                        { _id: new ObjectId(this._id) },
+                        { $set: { cart: { items: [] } } }
+                    );
+            })
     }
 
     getOrders() {
 
         const db = getDb();
         return db
-        .collection('orders')
-        .find({'user._id': new ObjectId(this._id)})
-        .toArray();
+            .collection('orders')
+            .find({ 'user._id': new ObjectId(this._id) })
+            .toArray();
 
     }
 
