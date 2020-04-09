@@ -19,7 +19,7 @@ exports.postAddProduct = (req, res, next) => {
         price: price,
         description: description,
         imageURL: imageURL,
-        userId: req.user
+        userId: req.user._id
     });
     product
         .save()
@@ -72,7 +72,6 @@ exports.postEditProduct = (req, res, next) => {
     const updatedImageURL = req.body.imageURL;
     const updatedPrice = req.body.price;
     const updatedDescription = req.body.description;
-
 
     Product.findById(productId)
         .then(product => {
