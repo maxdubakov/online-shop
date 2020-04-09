@@ -51,6 +51,16 @@ exports.getCart = (req, res, next) => {
         .populate('cart.items.productId')
         .execPopulate()
         .then(user => {
+            return user.cart.items;
+        })
+        .then(productsInCart => {
+            req.user.cart.items = productsInCart.filter(p=> {
+                return p.productId != null;
+            });
+            
+            return req.user.save();
+        })
+        .then(user => {
             const products = user.cart.items;
             res.render('shop/cart', {
                 path: '/cart',
@@ -101,13 +111,12 @@ exports.getOrders = (req, res, next) => {
 };
 
 exports.postOrder = (req, res, next) => {
-
     req.user
         .populate('cart.items.productId')
         .execPopulate()
         .then(user => {
             const products = user.cart.items.map(item => {
-                return { productData: { ...item.productId._doc }, quantity: item.quantity }
+                return { product: { ...item.productId._doc }, quantity: item.quantity }
             });
             const order = new Order({
                 user: {
