@@ -31,7 +31,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session(
     {
-        secret: 'secret',
+        secret: 'secret', //long chain of characters
         resave: false,
         saveUninitialized: false,
         store: store
@@ -75,4 +75,3 @@ mongoose
         app.listen(3000);
     })
     .catch(err => console.log(err));
-
