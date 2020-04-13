@@ -17,8 +17,7 @@ router.post(
         body(
             'email',
             'Your email is incorrect or not exist at all.'
-        ).isEmail()
-        .normalizeEmail(),
+        ).isEmail(),
 
         body('password')
             .isLength({
@@ -40,8 +39,7 @@ router.post(
                             return Promise.reject('E-Mail already exists!');
                         }
                     });
-            })
-            .normalizeEmail(),
+            }),
 
         body(
             'password',
