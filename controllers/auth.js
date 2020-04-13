@@ -5,7 +5,7 @@ const nodemailer = require('nodemailer');
 const { validationResult } = require('express-validator/check');
 const sendgridTransport = require('nodemailer-sendgrid-transport');
 
-
+const errorHandler500 = require('../util/error-handler500');
 const User = require('../models/user');
 
 const transporter = nodemailer.createTransport(sendgridTransport({
@@ -121,9 +121,7 @@ exports.postLogin = (req, res, next) => {
           console.log(err);
         });
     })
-    .catch(err => {
-      console.log(err);
-    })
+    .catch(errorHandler500());
 
 };
 
@@ -168,13 +166,13 @@ exports.postSignup = (req, res, next) => {
         html: '<h1>You successfully signed up!</h1>'
       });
     })
-    .catch(err => console.log(err))
+    .catch(errorHandler500());
 
 };
 
 exports.postLogout = (req, res, next) => {
   req.session.destroy(err => {
-    console.log('postLogout err: ', err);
+    errorHandler500();
     res.redirect('/');
   });
 };
@@ -215,7 +213,6 @@ exports.postReset = (req, res, next) => {
         return user.save();
       })
       .then(result => {
-
         return transporter.sendMail({
           to: req.body.email,
           from: 'onlineshopnodejs@gmail.com',
@@ -230,10 +227,7 @@ exports.postReset = (req, res, next) => {
           })
           .catch(err => console.log(err))
       })
-      .catch(err => {
-        console.log(err);
-      })
-
+      .catch(errorHandler500());
   });
 };
 
@@ -257,9 +251,7 @@ exports.getNewPassword = (req, res, next) => {
         passwordToken: token
       });
     })
-    .catch(err => {
-      console.log(err);
-    })
+    .catch(errorHandler500());
 
 };
 
@@ -287,8 +279,6 @@ exports.postNewPassword = (req, res, next) => {
     .then(result => {
       res.redirect('/login');
     })
-    .catch(err => {
-      console.log(err);
-    })
+    .catch(errorHandler500());
 
 };

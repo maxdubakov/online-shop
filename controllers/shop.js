@@ -1,6 +1,6 @@
 const Product = require('../models/product');
 const Order = require('../models/order');
-const mongoose = require('mongoose');
+const errorHandler500 = require('../util/error-handler500');
 
 exports.getProducts = (req, res, next) => {
     Product.find()
