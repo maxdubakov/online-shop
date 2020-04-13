@@ -1,5 +1,6 @@
 const Product = require('../models/product');
 const Order = require('../models/order');
+const mongoose = require('mongoose');
 
 exports.getProducts = (req, res, next) => {
     Product.find()
@@ -46,22 +47,21 @@ exports.getIndex = (req, res, next) => {
 }
 
 exports.getCart = (req, res, next) => {
-
     req.user
         .populate('cart.items.productId')
         .execPopulate()
         .then(user => {
-            return user.cart.items;
+            return req.user.cart.items;
         })
         .then(productsInCart => {
-            req.user.cart.items = productsInCart.filter(p=> {
+            req.user.cart.items = productsInCart.filter(p => {
                 return p.productId != null;
             });
-            
+
             return req.user.save();
         })
         .then(user => {
-            const products = user.cart.items;
+            const products = req.user.cart.items;
             res.render('shop/cart', {
                 path: '/cart',
                 pageTitle: 'Your Cart',
@@ -69,19 +69,17 @@ exports.getCart = (req, res, next) => {
             });
         })
         .catch(err => console.log(err))
-
 };
 
 exports.postCart = (req, res, next) => {
-
     const productId = req.body.productId;
-
     Product.findById(productId)
         .then(product => {
+
             return req.user.addToCart(product)
         })
         .then(result => {
-            res.redirect('/cart');
+            res.redirect('/');
         })
         .catch(err => console.log(err))
 };
@@ -107,7 +105,6 @@ exports.getOrders = (req, res, next) => {
             });
         })
         .catch(err => console.log(err))
-
 };
 
 exports.postOrder = (req, res, next) => {
@@ -115,12 +112,12 @@ exports.postOrder = (req, res, next) => {
         .populate('cart.items.productId')
         .execPopulate()
         .then(user => {
-            const products = user.cart.items.map(item => {
+            const products = req.user.cart.items.map(item => {
                 return { product: { ...item.productId._doc }, quantity: item.quantity }
             });
             const order = new Order({
                 user: {
-                    name: req.user.name,
+                    email: req.user.email,
                     userId: req.user._id
                 },
                 products: products
