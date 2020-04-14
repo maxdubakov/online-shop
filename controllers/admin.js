@@ -1,5 +1,6 @@
 const { validationResult } = require('express-validator/check');
 
+const fileHelper = require('../util/file');
 const Product = require('../models/product');
 
 // const mongoose = require('mongoose');
@@ -35,7 +36,7 @@ exports.postAddProduct = (req, res, next) => {
                 description: description
             },
             errorMessage: 'This type of the file is not supported!',
-            validationErrors: [{param: 'image'}]
+            validationErrors: [{ param: 'image' }]
         });
     }
 
@@ -157,6 +158,7 @@ exports.postEditProduct = (req, res, next) => {
             product.price = updatedPrice;
             product.description = updatedDescription;
             if (image) {
+                fileHelper.deleteFile(product.imageURL);
                 product.imageURL = image.path;
             }
             product.userId = req.session.user._id;
@@ -177,7 +179,14 @@ exports.postEditProduct = (req, res, next) => {
 
 exports.postDeleteProduct = (req, res, next) => {
     const productId = req.body.productId;
-    Product.deleteOne({ _id: productId, userId: req.user._id })
+    Product.findById(productId)
+        .then(product => {
+            if (!product) {
+                next(new Error('Product Not Found'));
+            }
+            fileHelper.deleteFile(product.imageURL);
+            return Product.deleteOne({ _id: productId, userId: req.user._id })
+        })
         .then(result => {
             res.redirect('/admin/products');
         })

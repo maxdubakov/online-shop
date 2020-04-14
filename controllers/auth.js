@@ -179,7 +179,6 @@ exports.postSignup = (req, res, next) => {
 
 exports.postLogout = (req, res, next) => {
   req.session.destroy(err => {
-    errorHandler500();
     res.redirect('/');
   });
 };
