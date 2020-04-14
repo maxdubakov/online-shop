@@ -5,7 +5,6 @@ const nodemailer = require('nodemailer');
 const { validationResult } = require('express-validator/check');
 const sendgridTransport = require('nodemailer-sendgrid-transport');
 
-const errorHandler500 = require('../util/error-handler500');
 const User = require('../models/user');
 
 const transporter = nodemailer.createTransport(sendgridTransport({
@@ -121,7 +120,11 @@ exports.postLogin = (req, res, next) => {
           console.log(err);
         });
     })
-    .catch(errorHandler500());
+    .catch(err => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 
 };
 
@@ -166,7 +169,11 @@ exports.postSignup = (req, res, next) => {
         html: '<h1>You successfully signed up!</h1>'
       });
     })
-    .catch(errorHandler500());
+    .catch(err => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+  });
 
 };
 
@@ -227,7 +234,11 @@ exports.postReset = (req, res, next) => {
           })
           .catch(err => console.log(err))
       })
-      .catch(errorHandler500());
+      .catch(err => {
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+        return next(error);
+    });
   });
 };
 
@@ -251,7 +262,11 @@ exports.getNewPassword = (req, res, next) => {
         passwordToken: token
       });
     })
-    .catch(errorHandler500());
+    .catch(err => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+  });
 
 };
 
@@ -279,6 +294,10 @@ exports.postNewPassword = (req, res, next) => {
     .then(result => {
       res.redirect('/login');
     })
-    .catch(errorHandler500());
+    .catch(err => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+  });
 
 };

@@ -1,6 +1,5 @@
 const Product = require('../models/product');
 const Order = require('../models/order');
-const errorHandler500 = require('../util/error-handler500');
 
 exports.getProducts = (req, res, next) => {
     Product.find()
@@ -128,4 +127,8 @@ exports.postOrder = (req, res, next) => {
             res.redirect('/orders');
         })
         .catch(err => console.log(err))
+};
+
+exports.getInvoice = (req, res, next) => {
+    
 };
