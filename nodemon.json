@@ -1,0 +1,8 @@
+{
+    "env": {
+        "MONGO_USER": "maxim",
+        "MONGO_PASSWORD": "Dubakov88",
+        "MONGO_DATABASE": "shop",
+        "STRIPE_KEY": "sk_test_lYTJ6Yh5tVpl66M6Vv4NVjxw00ChkMQJE7"
+    }
+}

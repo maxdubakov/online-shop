@@ -21,7 +21,6 @@ exports.postAddProduct = (req, res, next) => {
     const title = req.body.title;
     const price = req.body.price;
     const image = req.file;
-    console.log(image);
     const description = req.body.description;
 
     if (!image) {

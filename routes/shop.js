@@ -22,10 +22,8 @@ router.get('/checkout/success', shopController.getCheckoutSuccess);
 
 router.get('/checkout/cancel', shopController.getCheckout)
 
-router.get('/orders/:orderId', shopController.getInvoice);
+router.get('/orders/:orderId', isAuth, shopController.getInvoice);
 
 router.get('/', shopController.getIndex);
-
-
 
 module.exports = router;

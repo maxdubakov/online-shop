@@ -19,6 +19,14 @@ form {
   display: inline;
 }
 
+.search-form {
+  width: 20rem;
+  height: 3rem;
+  margin: 2rem auto;
+  display: block;
+  
+}
+
 .centered {
   text-align: center;
 }
