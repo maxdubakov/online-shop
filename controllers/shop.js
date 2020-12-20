@@ -24,7 +24,7 @@ exports.getProducts = (req, res, next) => {
             res.render('shop/index', {
                 prods: products,
                 pageTitle: 'Shop',
-                path: '/',
+                path: '/products',
                 currentPage: page,
                 nextPage: page + 1,
                 previousPage: page - 1,

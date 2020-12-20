@@ -25,3 +25,9 @@
 .form-control input.invalid {
   border-color: red;
 }
+
+.plain {
+  display: inline !important;
+  padding: 0.25rem;
+  width: 70% !important;
+}

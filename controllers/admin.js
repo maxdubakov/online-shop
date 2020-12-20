@@ -183,10 +183,10 @@ exports.deleteProduct = (req, res, next) => {
             if (!product) {
                 next(new Error('Product Not Found'));
             }
-            fileHelper.deleteFile(product.imageURL);
             return Product.deleteOne({ _id: productId, userId: req.user._id })
         })
         .then(result => {
+            fileHelper.deleteFile(product.imageURL);
             res.status(200).json({
                 message: 'Success!'
             });

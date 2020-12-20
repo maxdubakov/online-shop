@@ -17,7 +17,7 @@ const morgan = require('morgan');
 const errorController = require('./controllers/error');
 const User = require('./models/user');
 
-const MONGODB_URI = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@onlineshop-nephe.mongodb.net/${process.env.MONGO_DATABASE}`;
+const MONGODB_URI = `mongodb+srv://maxim:Dubakov88@onlineshop.nephe.mongodb.net/shop?retryWrites=true&w=majority`;
 
 const app = express();
 
@@ -134,6 +134,6 @@ mongoose
         //     key: privateKey,
         //     cert: certificate
         // }, app)
-            app.listen(process.env.PORT || 3000);
+        app.listen(process.env.PORT || 3000);
     })
     .catch(err => console.log(err));
